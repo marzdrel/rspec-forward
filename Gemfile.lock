@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rspec-forward (0.1.1)
+    rspec-forward (0.1.2)
       rspec-mocks
 
 GEM
