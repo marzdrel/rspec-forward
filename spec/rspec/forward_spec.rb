@@ -70,4 +70,30 @@ RSpec.describe RSpec::Forward do
         .to raise_error RSpec::Mocks::MockExpectationError
     end
   end
+
+  context "with named args" do
+    before do
+      class TestClass
+        def self.call(...)
+          new(...).call
+        end
+
+        def initialize(model:)
+          @model = model
+        end
+
+        def call; end
+      end
+    end
+
+    after { Object.send(:remove_const, "TestClass") }
+
+    let(:object) { TestClass }
+
+    it "forwards to instance" do
+      expect(object)
+        .to forward_to_instance(:call)
+        .with_named(model: "name")
+    end
+  end
 end

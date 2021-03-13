@@ -5,6 +5,8 @@ module ::RSpec
 
       def initialize(expected)
         @expected = expected
+        @kwargs ||= {}
+        @args ||= []
       end
 
       def matches?(actual)
@@ -14,22 +16,17 @@ module ::RSpec
 
         instance = instance_double(actual, @expected => :return)
 
-        rspec_args = @args.any? ? @args : [no_args]
-        rspec_kwargs = @kwargs.any? ? @kwargs : {}
-
         allow(actual)
           .to receive(:new)
-          .with(*rspec_args, **rspec_kwargs)
+          .with(*exp_args, **@kwargs)
           .and_return(instance)
 
-        actual.send(@expected, *@args) == :return
+        actual.send(@expected, *@args, **@kwargs) == :return
       end
 
       0.upto(10) do |index|
         define_method format("with_%<count>d_args", count: index) do
-          args = Array.new index, :arg
-          @args = args
-          @kwargs = []
+          @args = Array.new(index, :arg)
           self
         end
       end
@@ -48,12 +45,28 @@ module ::RSpec
         self
       end
 
+      def with_named(**kwargs)
+        @args = []
+        @kwargs = kwargs
+        self
+      end
+
       def failure_message
         "expected #{@target.inspect} to be #{@expected}"
       end
 
       def failure_message_when_negated
         "expected #{@target.inspect} not to be #{@expected}"
+      end
+
+      private
+
+      def exp_args
+        if @args.size.zero? && @kwargs.size.zero?
+          [no_args]
+        else
+          @args
+        end
       end
     end
 
