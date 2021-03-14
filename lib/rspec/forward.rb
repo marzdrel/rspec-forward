@@ -1,3 +1,5 @@
+require "rspec"
+require "rspec/mocks"
 require "rspec/forward/version"
 require "rspec/forward/forward_to_instance"
 
