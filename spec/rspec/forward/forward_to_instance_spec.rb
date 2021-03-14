@@ -75,6 +75,9 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
 
         def call
         end
+
+        def perform
+        end
       end
     end
 
@@ -85,6 +88,42 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
     context "with expected arguments" do
       it "passes" do
         expect(object).to forward_to_instance(:call).with_1_arg
+      end
+    end
+
+    context "with missing instance method name" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:unknown)
+            .with_1_arg
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            /TestClass class does not implement the instance method: unknown/
+          )
+      end
+    end
+
+    context "with missing class method name" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:perform)
+            .with_1_arg
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            NoMethodError,
+            "undefined method `perform' for TestClass:Class"
+          )
       end
     end
 
