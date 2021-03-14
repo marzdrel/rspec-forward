@@ -102,7 +102,7 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
     it "forwards to instance" do
       expect(object)
         .to forward_to_instance_build(:call)
-        .with_named(model: "name")
+        .with_named(:model)
     end
   end
 end

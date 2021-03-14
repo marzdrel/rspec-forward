@@ -1,5 +1,7 @@
 RSpec.describe RSpec::Forward::ForwardToInstance do
   context "with 0-arg class" do
+    let(:object) { TestClass }
+
     before do
       class TestClass
         def self.call(...)
@@ -11,26 +13,56 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
       end
     end
 
-    after { Object.send(:remove_const, "TestClass") }
-
-    let(:object) { TestClass }
-
-    it "forwards to instance" do
-      expect(object).to forward_to_instance(:call).with_no_args
+    after do
+      Object.send(:remove_const, "TestClass")
     end
 
-    it "fails to forward with arg" do
-      expect { expect(object).to forward_to_instance(:call).with_1_arg }
-        .to raise_error RSpec::Mocks::MockExpectationError
+    context "with no args as expected" do
+      it "passes" do
+        expect(object).to forward_to_instance(:call).with_no_args
+      end
     end
 
-    it "fails to forward with too many args" do
-      expect { expect(object).to forward_to_instance(:call).with_2_args }
-        .to raise_error RSpec::Mocks::MockExpectationError
+    context "with 1 arg expectation " do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_1_arg
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Wrong number of arguments. Expected 0, got 1.",
+          )
+      end
+    end
+
+    context "with multiple args" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_2_args
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Wrong number of arguments. Expected 0, got 2.",
+          )
+      end
     end
   end
 
   context "with 1-arg class" do
+    let(:object) { TestClass }
+
     before do
       class TestClass
         def self.call(...)
@@ -46,48 +78,200 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
       end
     end
 
-    after { Object.send(:remove_const, "TestClass") }
-
-    let(:object) { TestClass }
-
-    it "forwards to instance" do
-      expect(object).to forward_to_instance(:call).with_1_arg
+    after do
+      Object.send(:remove_const, "TestClass")
     end
 
-    it "fails to forward wihout args " do
-      expect { expect(object).to forward_to_instance(:call).with_no_args }
-        .to raise_error RSpec::Mocks::MockExpectationError
+    context "with expected arguments" do
+      it "passes" do
+        expect(object).to forward_to_instance(:call).with_1_arg
+      end
     end
 
-    it "fails to forward with too many args" do
-      expect { expect(object).to forward_to_instance(:call).with_3_args }
-        .to raise_error RSpec::Mocks::MockExpectationError
+    context "with no args" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_no_args
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Wrong number of arguments. Expected 1, got 0.",
+          )
+      end
+    end
+
+    context "with too many args" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_3_args
+        end
+      end
+
+      it "fails to forward with too many args" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Wrong number of arguments. Expected 1, got 3.",
+          )
+      end
+    end
+
+    context "with invalid expectation for named args" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_1_arg_and_named(:age)
+        end
+      end
+
+      it "fails with mismatch of args" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Wrong number of arguments. Expected 1, got 2.",
+          )
+      end
     end
   end
 
   context "with named args" do
+    let(:object) { TestClass }
+
     before do
       class TestClass
         def self.call(...)
           new(...).call
         end
 
-        def initialize(model:)
+        def initialize(model:, other:)
           @model = model
+          @other = other
         end
 
         def call; end
       end
     end
 
-    after { Object.send(:remove_const, "TestClass") }
-
-    let(:object) { TestClass }
+    after do
+      Object.send(:remove_const, "TestClass")
+    end
 
     it "forwards to instance" do
       expect(object)
         .to forward_to_instance(:call)
-        .with_named(model: "name")
+        .with_named(:model, :other)
+    end
+  end
+
+  context "with mix of positional and named args" do
+    let(:object) { TestClass }
+
+    before do
+      class TestClass
+        def self.call(...)
+          new(...).call
+        end
+
+        def initialize(name, age:)
+          @name = name
+          @age = age
+        end
+
+        def call; end
+      end
+    end
+
+    after do
+      Object.send(:remove_const, "TestClass")
+    end
+
+    context "with expected arguments" do
+      it "it passes" do
+        expect(object)
+          .to forward_to_instance(:call)
+          .with_1_arg_and_named(:age)
+      end
+    end
+
+    context "with no named arguments expected" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_1_arg
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Missing required keyword arguments: age",
+          )
+      end
+    end
+
+    context "with argument name mismatch" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_1_arg_and_named(:height)
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Missing required keyword arguments: age",
+          )
+      end
+    end
+
+    context "with too many named arguments" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_1_arg_and_named(:age, :height)
+        end
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Invalid keyword arguments provided: height",
+          )
+      end
+    end
+
+    context "with no positional arguments" do
+      let(:expectation) do
+        proc do
+          expect(object)
+            .to forward_to_instance(:call)
+            .with_named(:age)
+        end
+      end
+
+      it "fails assuming the positional arg as hash due to no_args" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Missing required keyword arguments: age",
+          )
+      end
     end
   end
 end
