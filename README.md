@@ -82,6 +82,38 @@ RSpec.describe Add do
 end
 ```
 
+If you would rather not use the old, deprecated
+`should` syntax in RSpec, replace the above exaple with the following:
+
+```ruby
+describe ".call" do
+  let(:object) { described_class }
+
+  it "passes arguments to instance" do
+    expect(object)
+      .to forward_to_instance(:call)
+      .with_2_args
+  end
+end
+```
+
+Possible calls to the matcher include the following:
+
+```ruby
+it { should forward_to_instance(:call).with_no_args }
+it { should forward_to_instance(:call).with_1_arg }
+it { should forward_to_instance(:call).with_2_args }
+it { should forward_to_instance(:call).with_3_args }
+# ...
+
+it { should forward_to_instance(:call).with_named(:foo, :bar) }
+it { should forward_to_instance(:call).with_1_arg_and_named(:foo) }
+it { should forward_to_instance(:call).with_2_args_and_named(:foo) }
+it { should forward_to_instance(:call).with_3_args_and_named(:foo, :bar) }
+```
+
+TODO: Explain `forward_to_instance_build(...)`
+
 ## Development
 
 After checking out the repo, run `bundle install` to install dependencies. Then, run
