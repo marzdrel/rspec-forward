@@ -59,7 +59,7 @@ Add.call(3, 5) # => 8
 ```
 
 Gem `rspec-forward` adds matcher `forward_to_instance` to verify if the
-call using Class Methods is properly building the instance of the calss and
+call using Class Methods is properly building the instance of the class and
 forwarding the method call to expected instance method.
 
 ```ruby
