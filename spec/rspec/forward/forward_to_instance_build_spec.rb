@@ -8,9 +8,11 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
           instance
         end
 
-        def initialize; end
+        def initialize
+        end
 
-        def call; end
+        def call
+        end
       end
     end
 
@@ -32,7 +34,7 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
       it "fails" do
         expect { expectation.call }
           .to raise_error(
-            RSpec::Mocks::MockExpectationError,
+            RSpec::Mocks::MockExpectationError
           )
       end
     end
@@ -49,7 +51,7 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
       it "fails" do
         expect { expectation.call }
           .to raise_error(
-            RSpec::Mocks::MockExpectationError,
+            RSpec::Mocks::MockExpectationError
           )
       end
     end
@@ -84,7 +86,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
           @arg = arg
         end
 
-        def call; end
+        def call
+        end
       end
     end
 
@@ -106,7 +109,7 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
       it "fails" do
         expect { expectation.call }
           .to raise_error(
-            RSpec::Mocks::MockExpectationError,
+            RSpec::Mocks::MockExpectationError
           )
       end
     end
@@ -124,7 +127,7 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Wrong number of arguments. Expected 1, got 3.",
+            "Wrong number of arguments. Expected 1, got 3."
           )
       end
     end
@@ -143,7 +146,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
           @model = model
         end
 
-        def call; end
+        def call
+        end
       end
     end
 

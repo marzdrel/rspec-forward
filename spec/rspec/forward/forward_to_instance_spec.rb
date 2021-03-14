@@ -6,9 +6,11 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
           new(...).call
         end
 
-        def initialize; end
+        def initialize
+        end
 
-        def call; end
+        def call
+        end
       end
     end
 
@@ -31,7 +33,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Wrong number of arguments. Expected 0, got 1.",
+            "Wrong number of arguments. Expected 0, got 1."
           )
       end
     end
@@ -49,7 +51,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Wrong number of arguments. Expected 0, got 2.",
+            "Wrong number of arguments. Expected 0, got 2."
           )
       end
     end
@@ -66,9 +68,11 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
           @arg = arg
         end
 
-        def call; end
+        def call
+        end
 
-        def perform; end
+        def perform
+        end
       end
     end
 
@@ -127,7 +131,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Wrong number of arguments. Expected 1, got 0.",
+            "Wrong number of arguments. Expected 1, got 0."
           )
       end
     end
@@ -145,7 +149,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Wrong number of arguments. Expected 1, got 3.",
+            "Wrong number of arguments. Expected 1, got 3."
           )
       end
     end
@@ -163,7 +167,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Wrong number of arguments. Expected 1, got 2.",
+            "Wrong number of arguments. Expected 1, got 2."
           )
       end
     end
@@ -181,7 +185,8 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
           @other = other
         end
 
-        def call; end
+        def call
+        end
       end
     end
 
@@ -204,7 +209,8 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
           @age = age
         end
 
-        def call; end
+        def call
+        end
       end
     end
 
@@ -229,7 +235,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Missing required keyword arguments: age",
+            "Missing required keyword arguments: age"
           )
       end
     end
@@ -247,7 +253,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Missing required keyword arguments: age",
+            "Missing required keyword arguments: age"
           )
       end
     end
@@ -265,7 +271,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Invalid keyword arguments provided: height",
+            "Invalid keyword arguments provided: height"
           )
       end
     end
@@ -283,7 +289,7 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect { expectation.call }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
-            "Missing required keyword arguments: age",
+            "Missing required keyword arguments: age"
           )
       end
     end

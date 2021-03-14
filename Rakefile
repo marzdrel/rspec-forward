@@ -3,10 +3,10 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
-task :default => :spec
+task default: :spec
 
 def gemspec
-  @gemspec ||= eval(File.read("rspec-forward.gemspec"), binding, ".gemspec")
+  @_gemspec ||= eval(File.read("rspec-forward.gemspec"), binding, ".gemspec")
 end
 
 desc "Validate the gemspec"
@@ -15,7 +15,7 @@ task :gemspec do
 end
 
 desc "Build the gem"
-task :gem => :gemspec do
+task gem: :gemspec do
   sh "gem build #{gemspec.name}.gemspec"
 
   FileUtils.mkdir_p "pkg"
