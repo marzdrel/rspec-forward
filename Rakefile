@@ -5,9 +5,11 @@ RSpec::Core::RakeTask.new(:spec)
 
 task default: :spec
 
+# rubocop:disable Security/Eval
 def gemspec
   @_gemspec ||= eval(File.read("rspec-forward.gemspec"), binding, ".gemspec")
 end
+# rubocop:enable Security/Eval
 
 desc "Validate the gemspec"
 task :gemspec do
