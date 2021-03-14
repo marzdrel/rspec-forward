@@ -87,10 +87,10 @@ If you would rather not use the old, deprecated
 
 ```ruby
 describe ".call" do
-  let(:object) { described_class }
+  let(:klass) { described_class }
 
   it "passes arguments to instance" do
-    expect(object)
+    expect(klass)
       .to forward_to_instance(:call)
       .with_2_args
   end
