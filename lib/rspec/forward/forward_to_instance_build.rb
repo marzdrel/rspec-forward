@@ -1,6 +1,6 @@
 module ::RSpec
   module Forward
-    class ForwardToInstance
+    class ForwardToInstanceBuild
       include ForwardMethods
       include Mocks::ExampleMethods
 
@@ -11,7 +11,9 @@ module ::RSpec
       end
 
       def matches?(actual)
-        matches_for?(actual, :return)
+        assign_actual(actual)
+
+        matches_for?(actual, instance)
       end
     end
   end
