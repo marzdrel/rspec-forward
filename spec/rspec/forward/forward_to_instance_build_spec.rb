@@ -1,9 +1,7 @@
 RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
   context "with no args" do
-    let(:object) { TestClass }
-
-    before do
-      class TestClass
+    let(:object) do
+      Class.new do
         def self.call(...)
           instance = new(...)
           instance.call
@@ -11,12 +9,9 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
         end
 
         def initialize; end
+
         def call; end
       end
-    end
-
-    after do
-      Object.send(:remove_const, "TestClass")
     end
 
     context "with expected calls" do
@@ -77,10 +72,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
   end
 
   context "with class accepting one argument" do
-    let(:object) { TestClass }
-
-    before do
-      class TestClass
+    let(:object) do
+      Class.new do
         def self.call(...)
           instance = new(...)
           instance.call
@@ -91,13 +84,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
           @arg = arg
         end
 
-        def call
-        end
+        def call; end
       end
-    end
-
-    after do
-      Object.send(:remove_const, "TestClass")
     end
 
     context "with matching expecations" do
@@ -143,10 +131,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
   end
 
   context "with named args" do
-    let(:object) { TestClass }
-
-    before do
-      class TestClass
+    let(:object) do
+      Class.new do
         def self.call(...)
           instance = new(...)
           instance.call
@@ -159,10 +145,6 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
 
         def call; end
       end
-    end
-
-    after do
-      Object.send(:remove_const, "TestClass")
     end
 
     context "with expected amount of args" do
