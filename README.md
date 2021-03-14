@@ -104,15 +104,13 @@ it { should forward_to_instance(:call).with_no_args }
 it { should forward_to_instance(:call).with_1_arg }
 it { should forward_to_instance(:call).with_2_args }
 it { should forward_to_instance(:call).with_3_args }
-# ...
-
 it { should forward_to_instance(:call).with_named(:foo, :bar) }
 it { should forward_to_instance(:call).with_1_arg_and_named(:foo) }
 it { should forward_to_instance(:call).with_2_args_and_named(:foo) }
 it { should forward_to_instance(:call).with_3_args_and_named(:foo, :bar) }
 ```
 
-TODO: Explain `forward_to_instance_build(...)`
+**TODO**: Explain `forward_to_instance_build(...)`
 
 ## Development
 
