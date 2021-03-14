@@ -3,13 +3,26 @@ module ::RSpec
     module ForwardMethods
       0.upto(10) do |index|
         define_method format("with_%<count>d_args", count: index) do
+          @kwargs = {}
           @args = Array.new(index, :arg)
+          self
+        end
+
+        name = format("with_%<count>d_args_and_named", count: index)
+
+        define_method name do |*kwargs|
+          @args = Array.new(index, :arg)
+          @kwargs = Hash[kwargs.map { [_1, _1] }]
           self
         end
       end
 
       def with_1_arg
         with_1_args
+      end
+
+      def with_1_arg_and_named(*args, **kwargs)
+        with_1_args_and_named(*args, **kwargs)
       end
 
       def with_no_args
@@ -22,9 +35,9 @@ module ::RSpec
         self
       end
 
-      def with_named(**kwargs)
+      def with_named(*kwargs)
         @args = []
-        @kwargs = kwargs
+        @kwargs = Hash[kwargs.map { [_1, _1] }]
         self
       end
 
