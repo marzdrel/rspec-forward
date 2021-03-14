@@ -15,6 +15,13 @@ module ::RSpec
 
         matches_for?(actual, instance)
       end
+
+      def description
+        <<~TXT.gsub(/\n+/, " ")
+          to pass the arguments to the constructor of instance, execute
+          provided instance method and return the instance of the class
+        TXT
+      end
     end
   end
 end

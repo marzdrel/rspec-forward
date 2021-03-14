@@ -13,6 +13,13 @@ module ::RSpec
       def matches?(actual)
         matches_for?(actual, :return)
       end
+
+      def description
+        <<~TXT.gsub(/\n+/, " ")
+          to pass the arguments to the constructor of instance and return
+          the value returned by the instance method
+        TXT
+      end
     end
   end
 end
