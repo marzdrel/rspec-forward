@@ -3,8 +3,8 @@ require_relative "lib/rspec/forward/version"
 Gem::Specification.new do |spec|
   spec.name = "rspec-forward"
   spec.version = RSpec::Forward::VERSION
-  spec.authors = ["Aleksader Długopolski"]
-  spec.email = ["ad@dotpro.org"]
+  spec.authors = ["Marz Drel"]
+  spec.email = ["marzdrel@dotpro.org"]
 
   spec.summary = <<~TXT.gsub(/[[:space:]]+/, " ").strip
     Set of RSpec matchers for checking class method to instance
@@ -24,10 +24,10 @@ Gem::Specification.new do |spec|
 
   # spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] =
-    "https://github.com/adlugopolski/rspec-forward"
+    "https://github.com/marzdrel/rspec-forward"
 
   spec.metadata["changelog_uri"] =
-    "https://github.com/adlugopolski/rspec-forward/blob/master/CHANGELOG.md"
+    "https://github.com/marzdrel/rspec-forward/blob/master/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

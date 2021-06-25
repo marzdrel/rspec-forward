@@ -120,7 +120,7 @@ After checking out the repo, run `bundle install` to install dependencies. Then,
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/adlugopolski/rspec-forward.
+https://github.com/marzdrel/rspec-forward.
 
 ## License
 
@@ -130,4 +130,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 Everyone interacting in the RSpec::Forward project's codebases, issue
 trackers, chat rooms and mailing lists is expected to follow the [code of
-conduct](https://github.com/adlugopolski/rspec-forward/blob/master/CODE_OF_CONDUCT.md).
+conduct](https://github.com/marzdrel/rspec-forward/blob/master/CODE_OF_CONDUCT.md).
