@@ -2,8 +2,8 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
   context "with 0-arg class" do
     let(:klass) do
       Class.new do
-        def self.call(...)
-          new(...).call
+        def self.call(*args)
+          new.call(*args)
         end
 
         def initialize
@@ -60,8 +60,8 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
   context "with 1-arg class" do
     let(:klass) do
       Class.new do
-        def self.call(...)
-          new(...).call
+        def self.call(*args)
+          new(*args).call
         end
 
         def initialize(arg)
@@ -176,8 +176,8 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
   context "with named args" do
     let(:klass) do
       Class.new do
-        def self.call(...)
-          new(...).call
+        def self.call(**args)
+          new(**args).call
         end
 
         def initialize(model:, other:)
@@ -200,8 +200,8 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
   context "with mix of positional and named args" do
     let(:klass) do
       Class.new do
-        def self.call(...)
-          new(...).call
+        def self.call(*args, **kwargs)
+          new(*args, **kwargs).call
         end
 
         def initialize(name, age:)

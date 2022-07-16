@@ -12,7 +12,8 @@ module ::RSpec
 
         define_method name do |*kwargs|
           @args = Array.new(index, :arg)
-          @kwargs = Hash[kwargs.map { [_1, _1] }]
+          @kwargs = Hash[kwargs.map { |name| [name, name] }]
+
           self
         end
       end
@@ -22,7 +23,11 @@ module ::RSpec
       end
 
       def with_1_arg_and_named(*args, **kwargs)
-        with_1_args_and_named(*args, **kwargs)
+        if kwargs.empty?
+          with_1_args_and_named(*args)
+        else
+          with_1_args_and_named(*args, **kwargs)
+        end
       end
 
       def with_no_args
@@ -37,7 +42,7 @@ module ::RSpec
 
       def with_named(*kwargs)
         @args = []
-        @kwargs = Hash[kwargs.map { [_1, _1] }]
+        @kwargs = Hash[kwargs.map { |name| [name, name] }]
         self
       end
 
@@ -73,16 +78,29 @@ module ::RSpec
       def matches_for?(actual, return_value)
         assign_actual(actual)
 
-        allow(@actual)
-          .to receive(:new)
-          .with(*exp_args, **@kwargs)
-          .and_return(instance)
+        if @kwargs.any?
+          allow(@actual)
+            .to receive(:new)
+            .with(*exp_args, **@kwargs)
+            .and_return(instance)
 
-        result = @actual.send(@expected, *@args, **@kwargs) == return_value
+          result = @actual.send(@expected, *@args, **@kwargs) == return_value
 
-        expect(@actual)
-          .to have_received(:new)
-          .with(*exp_args, **@kwargs)
+          expect(@actual)
+            .to have_received(:new)
+            .with(*exp_args, **@kwargs)
+        else
+          allow(@actual)
+            .to receive(:new)
+            .with(*exp_args)
+            .and_return(instance)
+
+          result = @actual.send(@expected, *@args) == return_value
+
+          expect(@actual)
+            .to have_received(:new)
+            .with(*exp_args)
+        end
 
         result
       end
