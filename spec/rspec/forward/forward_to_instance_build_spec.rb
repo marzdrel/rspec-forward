@@ -2,8 +2,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
   context "with no args" do
     let(:object) do
       Class.new do
-        def self.call(...)
-          instance = new(...)
+        def self.call(*args)
+          instance = new(*args)
           instance.call
           instance
         end
@@ -76,8 +76,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
   context "with class accepting one argument" do
     let(:object) do
       Class.new do
-        def self.call(...)
-          instance = new(...)
+        def self.call(*args)
+          instance = new(*args)
           instance.call
           instance
         end
@@ -136,8 +136,8 @@ RSpec.describe RSpec::Forward::ForwardToInstanceBuild do
   context "with named args" do
     let(:object) do
       Class.new do
-        def self.call(...)
-          instance = new(...)
+        def self.call(*args, **kwargs)
+          instance = new(*args, **kwargs)
           instance.call
           instance
         end
