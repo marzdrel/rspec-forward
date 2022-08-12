@@ -16,4 +16,14 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
     mocks.verify_doubled_constant_names = true
   end
+
+  config.around(:each, no_truncate: true) do |example|
+    instance = RSpec::Support::ObjectFormatter.default_instance
+    current = instance.max_formatted_output_length
+    instance.max_formatted_output_length = nil
+
+    example.run
+
+    instance.max_formatted_output_length = current
+  end
 end
