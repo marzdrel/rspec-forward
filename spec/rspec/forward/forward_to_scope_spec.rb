@@ -1,5 +1,5 @@
 RSpec.describe RSpec::Forward::ForwardToScope do
-  context "with expected classes defeind" do
+  context "with expected classes defined" do
     before do
       class SomeClass
         # Valid, complete example
