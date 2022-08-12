@@ -1,6 +1,7 @@
 require "rspec"
 require "rspec/mocks"
 require "rspec/forward/version"
+require "rspec/forward/core_extensions"
 require "rspec/forward/forward_methods"
 require "rspec/forward/forward_to_instance"
 require "rspec/forward/forward_to_instance_build"
