@@ -27,7 +27,7 @@ RSpec.describe RSpec::Forward::ForwardScopeParentMethods do
     end
 
     context "without required chain method" do
-      it "fails on invalid args", :no_truncate do
+      it "fails on invalid args" do
         expect { expect(SomeClass).to forward_to_scope(:example) }
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
