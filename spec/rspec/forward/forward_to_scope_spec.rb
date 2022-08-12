@@ -34,6 +34,10 @@ RSpec.describe RSpec::Forward::ForwardToScope do
         # Invalid example, no method present in parent class
         class ExampleWithoutMethodScope
         end
+
+        def self.method_with_different_name(*args)
+          ExampleScope.call(*args)
+        end
       end
     end
 
@@ -113,6 +117,27 @@ RSpec.describe RSpec::Forward::ForwardToScope do
           .to raise_error(
             RSpec::Mocks::MockExpectationError,
             "SomeClass::ExampleCustomNameScope does not implement: call",
+          )
+      end
+    end
+
+    context "with custom target klass name" do
+      it "passes" do
+        expect(SomeClass)
+          .to forward_to_scope(:method_with_different_name)
+          .using_class_name("SomeClass::ExampleScope")
+      end
+    end
+
+    context "with custom target klass name missing chain" do
+      it "fails" do
+        expect do
+          expect(SomeClass)
+            .to forward_to_scope(:method_with_different_name)
+        end
+          .to raise_error(
+            RSpec::Expectations::ExpectationNotMetError,
+            "SomeClass::MethodWithDifferentNameScope should be defined",
           )
       end
     end

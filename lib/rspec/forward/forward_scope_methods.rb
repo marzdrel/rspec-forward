@@ -8,15 +8,20 @@ module ::RSpec
         self
       end
 
+      def using_class_name(target_class_name)
+        @scope_klass_name = target_class_name
+        self
+      end
+
       def matches_for?(actual)
         method_name = @expected
         base_klass = format("%<method>s_scope", method: method_name.to_s).camelize
-        scope_klass_name = format("%s::%s", actual.to_s, base_klass)
+        @scope_klass_name ||= format("%s::%s", actual.to_s, base_klass)
 
         begin
-          @scope_klass = Object.const_get(scope_klass_name)
+          @scope_klass = Object.const_get(@scope_klass_name)
         rescue NameError => e
-          failure_scope_klass_name_not_defined(scope_klass_name)
+          failure_scope_klass_name_not_defined(@scope_klass_name)
           return false
         end
 
