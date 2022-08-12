@@ -18,6 +18,10 @@ RSpec.describe RSpec::Forward::ForwardToScope do
           end
         end
 
+        def self.mixed_name_and_class(*args)
+          ExampleCustomNameScope.some_method(*args)
+        end
+
         def self.example_custom_name(*args)
           ExampleCustomNameScope.some_method(*args)
         end
@@ -139,6 +143,15 @@ RSpec.describe RSpec::Forward::ForwardToScope do
             RSpec::Expectations::ExpectationNotMetError,
             "SomeClass::MethodWithDifferentNameScope should be defined",
           )
+      end
+    end
+
+    context "with custom target klass name and method" do
+      it "passes" do
+        expect(SomeClass)
+          .to forward_to_scope(:mixed_name_and_class)
+          .using_class_name("SomeClass::ExampleCustomNameScope")
+          .using_method(:some_method)
       end
     end
   end
