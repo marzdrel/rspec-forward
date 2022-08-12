@@ -20,6 +20,12 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
       end
     end
 
+    context "with no args as expected and no chain" do
+      it "acts like no_args and passes" do
+        expect(klass).to forward_to_instance(:call)
+      end
+    end
+
     context "with 1 arg expectation " do
       let(:expectation) do
         proc do
@@ -79,6 +85,16 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
     context "with expected arguments" do
       it "passes" do
         expect(klass).to forward_to_instance(:call).with_1_arg
+      end
+    end
+
+    context "with no chain" do
+      it "fails" do
+        expect { expect(klass).to forward_to_instance(:call) }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            /Wrong number of arguments\. Expected 1, got 0/,
+          )
       end
     end
 
@@ -190,10 +206,28 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
       end
     end
 
-    it "forwards to instance" do
-      expect(klass)
-        .to forward_to_instance(:call)
-        .with_named(:model, :other)
+    context "with valid args" do
+      it "forwards to instance" do
+        expect(klass)
+          .to forward_to_instance(:call)
+          .with_named(:model, :other)
+      end
+    end
+
+    context "with unexpected but required :other" do
+      let(:expectation) do
+        expect(klass)
+          .to forward_to_instance(:call)
+          .with_named(:model)
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Missing required keyword arguments: other"
+          )
+      end
     end
   end
 
@@ -219,6 +253,21 @@ RSpec.describe RSpec::Forward::ForwardToInstance do
         expect(klass)
           .to forward_to_instance(:call)
           .with_1_arg_and_named(:age)
+      end
+    end
+
+    context "with no chain" do
+      let(:expectation) do
+        expect(klass)
+          .to forward_to_instance(:call)
+      end
+
+      it "fails" do
+        expect { expectation.call }
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "Missing required keyword arguments: age"
+          )
       end
     end
 
