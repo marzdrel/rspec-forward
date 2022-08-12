@@ -4,6 +4,7 @@ require "rspec/forward/version"
 require "rspec/forward/forward_methods"
 require "rspec/forward/forward_to_instance"
 require "rspec/forward/forward_to_instance_build"
+require "rspec/forward/forward_to_scope"
 
 module RSpec
   module Forward
@@ -15,6 +16,10 @@ module RSpec
 
     def forward_to_instance_build(expected)
       ForwardToInstanceBuild.new(expected)
+    end
+
+    def forward_to_scope(expected)
+      ForwardToScope.new(expected)
     end
   end
 end
