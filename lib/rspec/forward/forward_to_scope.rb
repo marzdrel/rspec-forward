@@ -2,6 +2,7 @@ module ::RSpec
   module Forward
     class ForwardToScope
       include ForwardScopeMethods
+      include ForwardScopeParentMethods
       include Mocks::ExampleMethods
 
       def initialize(expected)

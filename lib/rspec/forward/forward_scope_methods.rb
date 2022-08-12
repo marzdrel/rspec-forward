@@ -3,20 +3,18 @@ module ::RSpec
     module ForwardScopeMethods
       using CoreExtensions
 
-      def using_method(target_method_name)
-        @target_method_name = target_method_name
-        self
-      end
+      def exp_args(actual)
+        return [actual, *@args] if @with_parent_arg
+        return [no_args] if @args.size.zero? && @kwargs.size.zero?
 
-      def using_class_name(target_class_name)
-        @scope_klass_name = target_class_name
-        self
+        @args
       end
 
       def matches_for?(actual)
         method_name = @expected
         base_klass = format("%<method>s_scope", method: method_name.to_s).camelize
         @scope_klass_name ||= format("%s::%s", actual.to_s, base_klass)
+
 
         begin
           @scope_klass = Object.const_get(@scope_klass_name)
@@ -29,10 +27,19 @@ module ::RSpec
           .to receive(@target_method_name)
           .and_return(:result)
 
-        result = actual.public_send(method_name) == :result
+        if @kwargs.any?
+          result = actual.public_send(method_name, *@args, **@kwargs) == :result
 
-        expect(@scope_klass)
-          .to have_received(@target_method_name)
+          expect(@scope_klass)
+            .to have_received(@target_method_name)
+            .with(*exp_args(actual), **@kwargs)
+        else
+          result = actual.public_send(method_name, *@args) == :result
+
+          expect(@scope_klass)
+            .to have_received(@target_method_name)
+            .with(*exp_args(actual))
+        end
 
         result
       end
