@@ -9,6 +9,7 @@ module ::RSpec
         @expected = expected
         @kwargs ||= {}
         @args ||= []
+        @target_method_name ||= :call
       end
 
       def matches?(actual)
@@ -22,6 +23,11 @@ module ::RSpec
         TXT
       end
 
+      def using_method(target_method_name)
+        @target_method_name = target_method_name
+        self
+      end
+
       private
 
       def matches_for?(actual, return_value)
@@ -30,17 +36,20 @@ module ::RSpec
         scope_klass_name = format("%s::%s", actual.to_s, base_klass)
 
         begin
-          scope_klass = Object.const_get(scope_klass_name)
+          @scope_klass = Object.const_get(scope_klass_name)
         rescue NameError => e
           failure_scope_klass_name_not_defined(scope_klass_name)
           return false
         end
 
-        @target = scope_klass
-        allow(scope_klass).to receive(:call).and_return(:result)
+        allow(@scope_klass)
+          .to receive(@target_method_name)
+          .and_return(:result)
 
         result = actual.public_send(method_name) == :result
-        expect(scope_klass).to have_received(:call)
+
+        expect(@scope_klass)
+          .to have_received(@target_method_name)
 
         result
       end

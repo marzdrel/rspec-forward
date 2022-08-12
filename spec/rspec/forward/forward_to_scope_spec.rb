@@ -2,14 +2,7 @@ RSpec.describe RSpec::Forward::ForwardToScope do
   context "with expected classes defeind" do
     before do
       class SomeClass
-        class ExampleWithoutCallScope
-          def self.call(*args)
-          end
-        end
-
-        class ExampleWithoutMethodScope
-        end
-
+        # Valid, complete example
         class ExampleScope
           def self.call(*args)
           end
@@ -19,7 +12,27 @@ RSpec.describe RSpec::Forward::ForwardToScope do
           ExampleScope.call(*args)
         end
 
+        # Valid, example with custom target method name
+        class ExampleCustomNameScope
+          def self.some_method(*args)
+          end
+        end
+
+        def self.example_custom_name(*args)
+          ExampleCustomNameScope.some_method(*args)
+        end
+
+        # Invalid example, missing call in the method
+        class ExampleWithoutCallScope
+          def self.call(*args)
+          end
+        end
+
         def self.example_without_call
+        end
+
+        # Invalid example, no method present in parent class
+        class ExampleWithoutMethodScope
         end
       end
     end
@@ -80,6 +93,27 @@ RSpec.describe RSpec::Forward::ForwardToScope do
             .to forward_to_scope(:example_without_call)
         end
           .to raise_error(RSpec::Mocks::MockExpectationError)
+      end
+    end
+
+    context "with custom target method name" do
+      it "passes" do
+        expect(SomeClass)
+          .to forward_to_scope(:example_custom_name)
+          .using_method(:some_method)
+      end
+    end
+
+    context "with custom target method without using_method" do
+      it "fails" do
+        expect do
+          expect(SomeClass)
+            .to forward_to_scope(:example_custom_name)
+        end
+          .to raise_error(
+            RSpec::Mocks::MockExpectationError,
+            "SomeClass::ExampleCustomNameScope does not implement: call",
+          )
       end
     end
   end
