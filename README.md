@@ -37,6 +37,8 @@ complete: `spring stop`.
 
 ## Usage
 
+### Forwarding from class method to instance of the same class
+
 Assume you have a Method Object with `#call` method defined like this:
 
 ```ruby
@@ -75,24 +77,13 @@ RSpec.describe Add do
   end
 
   describe ".call" do
-    subject { described_class }
+    let(:klass) { described_class }
 
-    it { should forward_to_instance(:call).with_2_args }
-  end
-end
-```
-
-If you would rather not use the old, deprecated
-`should` syntax in RSpec, replace the above exaple with the following:
-
-```ruby
-describe ".call" do
-  let(:klass) { described_class }
-
-  it "passes arguments to instance" do
-    expect(klass)
-      .to forward_to_instance(:call)
-      .with_2_args
+    it "passes arguments to instance" do
+      expect(klass)
+        .to forward_to_instance(:call)
+        .with_2_args
+    end
   end
 end
 ```
@@ -100,17 +91,40 @@ end
 Possible calls to the matcher include the following:
 
 ```ruby
-it { should forward_to_instance(:call).with_no_args }
-it { should forward_to_instance(:call).with_1_arg }
-it { should forward_to_instance(:call).with_2_args }
-it { should forward_to_instance(:call).with_3_args }
-it { should forward_to_instance(:call).with_named(:foo, :bar) }
-it { should forward_to_instance(:call).with_1_arg_and_named(:foo) }
-it { should forward_to_instance(:call).with_2_args_and_named(:foo) }
-it { should forward_to_instance(:call).with_3_args_and_named(:foo, :bar) }
+it { is_expected.to forward_to_instance(:call).with_no_args }
+it { is_expected.to forward_to_instance(:call).with_1_arg }
+it { is_expected.to forward_to_instance(:call).with_2_args }
+it { is_expected.to forward_to_instance(:call).with_3_args }
+it { is_expected.to forward_to_instance(:call).with_named(:foo, :bar) }
+it { is_expected.to forward_to_instance(:call).with_1_arg_and_named(:foo) }
+it { is_expected.to forward_to_instance(:call).with_2_args_and_named(:foo) }
+it { is_expected.to forward_to_instance(:call).with_3_args_and_named(:foo, :bar) }
 ```
 
 **TODO**: Explain `forward_to_instance_build(...)`
+
+### Forwarding from method to another class
+
+Assume you have a method which just passes all args to another class.
+
+```ruby
+class Add
+  def self.call(addend1, addend2)
+    @addend1 + @addend2
+  end
+end
+
+class Other
+  def add(...)
+    Add.call(...)
+  end
+end
+
+Add.call(3, 5) # => 8
+```
+[...]
+
+**TODO**: Explain usage.
 
 ## Development
 
