@@ -10,7 +10,17 @@ module ::RSpec
         @args
       end
 
-      def matches_for?(actual)
+      def find_actual(klass_or_instance)
+        if klass_or_instance.is_a? Class
+          klass_or_instance
+        else
+          klass_or_instance.class
+        end
+      end
+
+      def matches_for?(klass_or_instance)
+        actual = find_actual(klass_or_instance)
+
         method_name = @expected
         base_klass = format("%<method>s_scope", method: method_name.to_s).camelize
         @scope_klass_name ||= format("%s::%s", actual.to_s, base_klass)
@@ -28,13 +38,13 @@ module ::RSpec
           .and_return(:result)
 
         if @kwargs.any?
-          result = actual.public_send(method_name, *@args, **@kwargs) == :result
+          result = klass_or_instance.public_send(method_name, *@args, **@kwargs) == :result
 
           expect(@scope_klass)
             .to have_received(@target_method_name)
             .with(*exp_args(actual), **@kwargs)
         else
-          result = actual.public_send(method_name, *@args) == :result
+          result = klass_or_instance.public_send(method_name, *@args) == :result
 
           expect(@scope_klass)
             .to have_received(@target_method_name)
@@ -60,7 +70,7 @@ module ::RSpec
       end
 
       def self.included(base)
-        private :matches_for?
+        private :matches_for?, :find_actual
       end
     end
   end
