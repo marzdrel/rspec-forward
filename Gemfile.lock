@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     rspec-forward (0.3.0)
-      rspec-mocks (~> 3.9)
+      rspec-mocks (~> 3)
 
 GEM
   remote: https://rubygems.org/
